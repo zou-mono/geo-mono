@@ -5,15 +5,26 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "dev": "vue-cli-service serve --mode development --devtool source-map",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "bootstrap": "^3.4.1",
     "core-js": "^3.6.5",
+    "element-ui": "^2.15.3",
+    "file-loader": "^4.3.0",
+    "html-loader": "^1.3.2",
+    "jquery": "^3.6.0",
+    "mini-css-extract-plugin": "^0.9.0",
     "register-service-worker": "^1.7.1",
+    "vanilla-lazyload": "^17.4.0",
     "vue": "^2.6.11",
+    "vue-i18n": "^8.25.0",
     "vue-router": "^3.2.0",
+    "vue-scrollactive": "^0.9.3",
+    "vue-scrollto": "^2.20.0",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
