@@ -2,6 +2,7 @@
 <div id="example-explore">    
     <div id="left-container">
         <div id="left-chart-nav">
+            <el-button type="danger" icon="el-icon-canshushezhi" circle></el-button>
             <scrollactive
                 active-class="active"
                 :offset="80"

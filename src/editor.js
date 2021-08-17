@@ -6,6 +6,7 @@ import VueI18n from 'vue-i18n';
 import messages from './common/i18n';
 import './registerServiceWorker'
 import 'element-ui/lib/theme-chalk/index.css'
+import './assets/iconfont/iconfont.css'
 // import 'bootstrap/dist/js/bootstrap.min'
 // import 'bootstrap/dist/css/bootstrap.min.css'
 // import editor from '@c/Editor'
@@ -23,18 +24,18 @@ Vue.use(ElementUI)
 Vue.use(VueI18n);
 
 const i18n = new VueI18n({
-  locale: 'zh',
-  fallbackLocale: 'zh',
-  messages
+    locale: 'zh',
+    fallbackLocale: 'zh',
+    messages
 });
 
 store.state.locale = 'zh';
 store.state.version = Date.now()
 
 new Vue({
-  el: '#app',
-  i18n,
-  // router,
-  store,
-  render: h => h(editor)
+    el: '#app',
+    i18n,
+    // router,
+    store,
+    render: h => h(editor)
 })

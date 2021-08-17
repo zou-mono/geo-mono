@@ -1,6 +1,6 @@
 <template>
 <div :class="[(inEditor) ? '' : 'full']">
-    <div id="editor-right-container" :style="{ width: leftContainerSize + '%' }" v-if="!shared.isMobile">
+    <div id="editor-right-container" v-if="!shared.isMobile">
         <div class="chart-container"></div>
       <!-- <el-tabs v-model="currentTab" type="card" @tab-click="handleClick">
         <el-tab-pane label="界面" name="ui-editor">

@@ -1,0 +1,23 @@
+{
+  "id": "2740975",
+  "name": "test",
+  "font_family": "element-icons",
+  "css_prefix_text": "el-icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "23206645",
+      "name": "参数设置",
+      "font_class": "canshushezhi",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "19446883",
+      "name": "阿里云",
+      "font_class": "alibabacloud",
+      "unicode": "ea9f",
+      "unicode_decimal": 60063
+    }
+  ]
+}

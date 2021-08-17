@@ -19,7 +19,7 @@ module.exports = {
             template: "public/editor.html",
             filename: "editor.html",
             chunks: ["chunk-vendors", "chunk-common", "editor"]
-        }                
+        }
     },
     chainWebpack: config => {
         config.output
@@ -42,21 +42,21 @@ module.exports = {
         config.module
             .rule('icons')
             .test(/\.svg$/)
-            .use('html-loader')            
+            .use('html-loader')
             .loader('html-loader');
         config
             .plugin('MiniCssExtractPlugin')
-            .use(require.resolve('mini-css-extract-plugin'), [{filename: './css/[name]-bundle.css'}])
-        // config.module
-        //     .rule('pics')
-        //     .test(/\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2)(\?.+)?$/)
-        //     .use('file-loader')
-        //     .loader('file-loader')
-        //     .options({
-        //         limit: 10000,
-        //         outputPath: '../assets',
-        //         name: '[name].[ext]'                
-        //     })
+            .use(require.resolve('mini-css-extract-plugin'), [{ filename: './css/[name]-bundle.css' }])
+            // config.module
+            //     .rule('pics')
+            //     .test(/\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2)(\?.+)?$/)
+            //     .use('file-loader')
+            //     .loader('file-loader')
+            //     .options({
+            //         limit: 10000,
+            //         outputPath: '../assets',
+            //         name: '[name].[ext]'                
+            //     })
             // .options({
             //     minimize: true
             // })
