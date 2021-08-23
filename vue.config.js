@@ -1,12 +1,14 @@
 const path = require('path')
 
 module.exports = {
-    publicPath: './', // 基本路径
-    // outputDir: 'dist/js', // 输出文件目录
+    // publicPath: './', // 基本路径
+    publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
+    // // outputDir: 'dist/js', // 输出文件目录
     lintOnSave: false, // eslint-loader 是否在保存的时候检查
     devServer: {
         hot: true
     },
+    runtimeCompiler: true,
     pages: {
         explore: {
             entry: "./src/main.js",
@@ -34,6 +36,7 @@ module.exports = {
             .set('@c', path.resolve(__dirname, './src/components'))
             .set('@p', path.resolve(__dirname, './src/pages'))
             .set('@s', path.resolve(__dirname, './src/store'))
+            .set('@v', path.resolve(__dirname, './src/views'))
             .set('$', 'jquery/dist/jquery.min.js');
         config.module
             .rule('svg')
@@ -44,6 +47,14 @@ module.exports = {
             .test(/\.svg$/)
             .use('html-loader')
             .loader('html-loader');
+        config.module
+            .rule('images')
+            .use('url-loader')
+            .loader('url-loader')
+            .tap(options => Object.assign(options, {
+                limit: 20480,
+                name: '[name]_[hash].[ext]'
+            }))
         config
             .plugin('MiniCssExtractPlugin')
             .use(require.resolve('mini-css-extract-plugin'), [{ filename: './css/[name]-bundle.css' }])
@@ -55,28 +66,28 @@ module.exports = {
             //     .options({
             //         limit: 10000,
             //         outputPath: '../assets',
-            //         name: '[name].[ext]'                
-            //     })
-            // .options({
-            //     minimize: true
-            // })
-            // .use([{
-            //     loader: 'html-loader',
-            //     options: {
-            //         minimize: true
-            //     }
-            // }])
-            // .test(/\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2)(\?.+)?$/)
-            // .loader('file-loader')
-            // .use([{
-            //     loader: 'file-loader',
-            //     options: {
-            //         limit: 10000,
-            //         outputPath: '../assets',
             //         name: '[name].[ext]'
-            //     }
-            // }])
-            // .end()
+            //     })
+            //     .options({
+            //         minimize: true
+            //     })
+            //     .use([{
+            //         loader: 'html-loader',
+            //         options: {
+            //             minimize: true
+            //         }
+            //     }])
+            //     .test(/\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2)(\?.+)?$/)
+            //     .loader('file-loader')
+            //     .use([{
+            //         loader: 'file-loader',
+            //         options: {
+            //             limit: 10000,
+            //             outputPath: '../assets',
+            //             name: '[name].[ext]'
+            //         }
+            //     }])
+            //     .end()
     },
     configureWebpack: (config) => {
         if (process.env.NODE_ENV === 'production') {

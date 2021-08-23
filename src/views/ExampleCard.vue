@@ -12,6 +12,7 @@
 
 // import {store} from '../common/store';
 import {SUPPORT_WEBP, URL_PARAMS} from '../store/config';
+import store from '@/store'
 
 export default {
     name: 'example-card',
@@ -54,7 +55,10 @@ export default {
             if ('useDirtyRect' in URL_PARAMS) {
                 hash.push('useDirtyRect');
             }
-            return './editor.html?' + hash.join('&');
+            let locale =  store.state.locale
+            // return `./${locale}/editor.html?` + hash.join('&');
+            // return `./editor.html?` + hash.join('&');
+            return `./editor/${locale}/`
         },
 
         screenshotURL() {

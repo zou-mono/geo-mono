@@ -17,7 +17,7 @@
                 class="btn-add-data"
                 icon="el-icon-circle-plus-outline"
                 type="text"
-                >添加数据</el-button
+                >{{$t('editor.addData')}}</el-button
               >
               <el-collapse>
                 <el-collapse-item name="1">
@@ -130,7 +130,7 @@
 
 <script>
 // import {store} from '../common/store'
-import Preview from "./Preview.vue";
+import Preview from "../components/Preview.vue";
 
 export default {
   name: "editor",
