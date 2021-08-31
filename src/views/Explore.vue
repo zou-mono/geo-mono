@@ -64,7 +64,7 @@ import CHART_LIST from '../data/chart-list-data';
 import CHART_LIST_GL from '../data/chart-list-data-gl';
 import {EXAMPLE_CATEGORIES, BLACK_MAP, URL_PARAMS} from '../store/config';
 // import {store} from '../store/config';
-import ExampleCard from './ExampleCard.vue';
+import ExampleCard from '@c/ExampleCard.vue';
 import LazyLoad from 'vanilla-lazyload/dist/lazyload.esm';
 // import scrollIntoView from 'scroll-into-view';
 

@@ -36,8 +36,8 @@ const Trans = {
     },
     setI18nLocaleInServices(locale) {
         Trans.currentLocale = locale
-            // axios.defaults.headers.common['Accept-Language'] = locale
-            // document.querySelector('html').setAttribute('lang', locale)
+        axios.defaults.headers.common['Accept-Language'] = locale
+        document.querySelector('html').setAttribute('lang', locale)
         return locale
     },
     changeLocale(locale) {

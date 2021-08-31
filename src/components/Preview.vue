@@ -1,7 +1,8 @@
 <template>
 <div :class="[(inEditor) ? '' : 'full']">
     <div id="editor-right-container" v-if="!shared.isMobile">
-        <div class="chart-container"></div>
+      <img src="../assets/logo.png" style="width:100%;min-height:100%"/>
+        <!-- <div class="chart-container"></div> -->
       <!-- <el-tabs v-model="currentTab" type="card" @tab-click="handleClick">
         <el-tab-pane label="界面" name="ui-editor">
           <el-container>
@@ -42,10 +43,10 @@ export default {
 #editor-right-container {
     position: absolute;
     // top: $control-panel-height;
-    top: 42px;
-    right: 15px;
-    bottom: 15px;
-    left: 15px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
     box-sizing: border-box;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 20px;
     border-radius: 5px;
@@ -54,10 +55,12 @@ export default {
 
     padding: 10px;
 
-    .chart-container {
-        position: relative;
-        height: 100%;
-    }
+    transition: width 2s;
+
+    // .chart-container {
+    //     position: relative;
+    //     height: 100%;
+    // }
 }
 
 .full {
