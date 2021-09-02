@@ -1,7 +1,8 @@
 <template>
 <div :class="[(inEditor) ? '' : 'full']">
     <div id="editor-right-container" v-if="!shared.isMobile">
-      <img src="../assets/logo.png" style="width:100%;min-height:100%"/>
+      <!-- <img src="../assets/logo.png" style="width:100%;min-height:100%"/> -->
+      <map-view></map-view>
         <!-- <div class="chart-container"></div> -->
       <!-- <el-tabs v-model="currentTab" type="card" @tab-click="handleClick">
         <el-tab-pane label="界面" name="ui-editor">
@@ -22,10 +23,12 @@
 </template>
 
 <script>
-// import {store} from '../common/store'
+import mapView from '@c/mapView'
 
 export default {
     props: ['inEditor'],
+
+    components: {mapView},
 
     data() {
         return {
