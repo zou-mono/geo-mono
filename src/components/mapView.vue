@@ -38,8 +38,8 @@ export default {
         layers: [baseLayer],
         view: new View({
           projection: "EPSG:4326",
-          zoom: 5,
-          center: [114, 32],
+          zoom: 11,
+          center: [114.08, 22.6],
         }),
       });
 

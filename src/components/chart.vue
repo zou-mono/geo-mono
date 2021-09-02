@@ -6,7 +6,11 @@
 <script>
 import * as echarts from 'echarts/core';
 import {
-    GridComponent
+    TitleComponent,
+    ToolboxComponent,
+    TooltipComponent,
+    GridComponent,
+    LegendComponent
 } from 'echarts/components';
 import {
     LineChart
@@ -16,7 +20,7 @@ import {
 } from 'echarts/renderers';
 
 echarts.use(
-    [GridComponent, LineChart, CanvasRenderer]
+    [TitleComponent, ToolboxComponent, TooltipComponent, GridComponent, LegendComponent, LineChart, CanvasRenderer]
 );
 
 export default {

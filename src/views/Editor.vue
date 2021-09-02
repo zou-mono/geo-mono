@@ -21,6 +21,7 @@
           :size="draw_width"
           custom-class="demo-drawer"
           :wrapperClosable="false"
+          :modal-append-to-body="false"
           :style="{ transform: 'translate3d(' + sidebar_width + 'px,0,0)' }"
         >
           <el-table :data="gridData">
@@ -447,7 +448,7 @@ $handler-width: 0px;
   padding: 0;
   // padding-left: $handler-width;
   border: none;
-  z-index: 30;
+  z-index: 3000;
 
   background: $clr-bg;
 }
