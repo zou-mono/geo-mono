@@ -53,6 +53,7 @@ export default {
                             dragDom.style.width = elW + (e.clientX - clientX) + 'px'
                         }
                     }
+                    el.style.width = dragDom.style.width // 保证最外面的wrapper宽度和drawer一样，这样就不会导致覆盖下层组件
                 }
                 // 拉伸结束
             document.onmouseup = function(e) {

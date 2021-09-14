@@ -18,6 +18,7 @@
       <el-main>
         <el-drawer
           :style="{left: sidebar_width + 'px'}" 
+          v-drag-drawer
           title="我嵌套了表格!"
           :visible.sync="CollapseState"
           direction="ltr"
@@ -149,6 +150,7 @@
 
 <script>
 // import {store} from '../common/store'
+import dragDrawer from "@/directives/drag-drawer"; // use clipboard by v-directive
 import Preview from "@c/Preview.vue";
 import dragDrawer from "@/directives/drag-drawer"; 
 
@@ -167,15 +169,24 @@ export default {
     // }
   },
   watch: {
-    CollapseState:  function() {
-      if (this.CollapseState === true)
-        setTimeout(() => {
-            this.mainContainerSize =
-              window.innerWidth - this.draw_width - this.sidebar_width;
-        }, 300)
-      else
-        this.mainContainerSize = window.innerWidth - this.sidebar_width;
-    }
+    // CollapseState:  function() {
+    //   if (this.CollapseState === true)
+    //     setTimeout(() => {
+    //         this.mainContainerSize =
+    //           window.innerWidth - this.draw_width - this.sidebar_width;
+    //     }, 300)
+    //   else
+    //     this.mainContainerSize = window.innerWidth - this.sidebar_width;
+    // }
+
+    // CollapseState:  function () {
+    //     console.log(window.innerWidth - this.draw_width)
+    //     if (this.CollapseState === true)
+    //       this.mainContainerSize =
+    //         window.innerWidth - this.draw_width - this.sidebar_width;
+    //     else
+    //       this.mainContainerSize = window.innerWidth - this.sidebar_width;
+    // }
   },
   // beforeMount(){
 
@@ -259,6 +270,13 @@ export default {
     changeCollapseState() {
       this.CollapseState = !this.CollapseState;
       // this.$emit("update:table", this.CollapseState)
+
+      if (this.CollapseState === true) {
+        let wrapper = this.$el.querySelector('.el-drawer__wrapper')
+        let dragDom = this.$el.querySelector('.el-drawer')
+        wrapper.style.width = dragDom.style.width
+        // console.log(wrapper.style.width)
+      }
     },
 
     onSplitterDragStart() {
@@ -448,7 +466,6 @@ $handler-width: 0px;
   padding: 0;
   // padding-left: $handler-width;
   border: none;
-  z-index: 3000;
   background: $clr-bg;
 }
 
