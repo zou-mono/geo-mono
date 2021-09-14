@@ -14,6 +14,9 @@
         <el-button icon="el-icon-canshushezhi" @click="changeCollapseState">
           数据
         </el-button>
+        <el-button icon="el-icon-ditu" @click="changeCollapseState">
+          地图
+        </el-button>
       </el-aside>
       <el-main>
         <el-drawer
@@ -152,7 +155,6 @@
 // import {store} from '../common/store'
 import dragDrawer from "@/directives/drag-drawer"; // use clipboard by v-directive
 import Preview from "@c/Preview.vue";
-import dragDrawer from "@/directives/drag-drawer"; 
 
 export default {
   name: "editor",
@@ -193,7 +195,7 @@ export default {
   // },
   data() {
     return {
-      sidebar_width: 60, // 侧边菜单栏的宽度
+      sidebar_width: 70, // 侧边菜单栏的宽度
       draw_width: 600, // 左边抽屉组件的宽度
       table: false,
       CollapseState: false,
@@ -352,12 +354,13 @@ $handler-width: 0px;
     // color: #333;
 
     .el-button {
-      width: 50px;
-      height: 50px;
+      width: 55px;
+      height: 55px;
       padding: 0px;
       line-height: 20px;
       text-align: center;
-      margin: 5px;
+      margin: 12px 0px 0px 0px;
+      font-size: 14px;
     }
 
     .el-button > span {
@@ -382,12 +385,12 @@ $handler-width: 0px;
     padding: 0;
     position: relative;
 
-    .btn-add-data {
-      // display: flex;
-      // display: block;
-      margin: 10px 0px;
-      width: 100%;
-    }
+    // .btn-add-data {
+    //   // display: flex;
+    //   // display: block;
+    //   // margin: 10px 0px;
+    //   width: 100%;
+    // }
 
     ::-webkit-scrollbar {
       height: 8px;
@@ -469,4 +472,7 @@ $handler-width: 0px;
   background: $clr-bg;
 }
 
+.el-icon-canshushezhi, .el-icon-ditu{
+  font-size: 24px;
+}
 </style>

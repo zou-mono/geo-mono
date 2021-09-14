@@ -1,7 +1,7 @@
 @font-face {
     font-family: "element-icons";
-    /* Project id 2740975 */
-    src: url('iconfont.woff2?t=1629103828707') format('woff2'), url('iconfont.woff?t=1629103828707') format('woff'), url('iconfont.ttf?t=1629103828707') format('truetype');
+    /* Project id 2812329 */
+    src: url('iconfont.woff2?t=1631609557442') format('woff2'), url('iconfont.woff?t=1631609557442') format('woff'), url('iconfont.ttf?t=1631609557442') format('truetype');
 }
 
 .element-icons {
@@ -10,7 +10,10 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    display: inline-block;
+}
+
+.el-icon-ditu:before {
+    content: "\ed99";
 }
 
 .el-icon-canshushezhi:before {
