@@ -1,11 +1,14 @@
 <template>
-  <div id="main-container">
+  <div id="container">
     <!-- <div
       id="editor-left-container"
       :style="{ width: leftContainerSize + '%' }"
       v-if="!shared.isMobile"> -->
     <!-- <el-tabs v-model="currentTab" type="card" @tab-click="handleClick"> -->
     <!-- <el-tab-pane label="界面" name="ui-editor"> :append-to-body=true :visible="CollapseState" -->
+
+          <!-- :style="{left: sidebar_width + 'px'}" -->
+              <!-- :style="{ transform: 'translate3d(' + sidebar_width + 'px,0,0)' }"   -->
     <el-container>
       <el-aside :style="{ width: sidebar_width + 'px' }">
         <el-button icon="el-icon-canshushezhi" @click="changeCollapseState">
@@ -14,15 +17,15 @@
       </el-aside>
       <el-main>
         <el-drawer
+          :style="{left: sidebar_width + 'px'}" 
           title="我嵌套了表格!"
           :visible.sync="CollapseState"
           direction="ltr"
           :modal="false"
           :size="draw_width"
-          custom-class="demo-drawer"
           :wrapperClosable="false"
           :modal-append-to-body="false"
-          :style="{ transform: 'translate3d(' + sidebar_width + 'px,0,0)' }"
+          :append-to-body="true"
         >
           <el-table :data="gridData">
             <el-table-column
@@ -40,7 +43,7 @@
         </el-drawer>
         <Preview
           :inEditor="true"
-          class="right-container"
+          class="main-container"
           ref="preview"
           :style="{
             width: mainContainerSize + 'px'
@@ -147,11 +150,15 @@
 <script>
 // import {store} from '../common/store'
 import Preview from "@c/Preview.vue";
+import dragDrawer from "@/directives/drag-drawer"; 
 
 export default {
   name: "editor",
   components: {
     Preview,
+  },
+  directives: {
+    dragDrawer,
   },
   computed: {
     // CollapseState: function() {
@@ -169,16 +176,10 @@ export default {
       else
         this.mainContainerSize = window.innerWidth - this.sidebar_width;
     }
-
-    // CollapseState:  function () {
-    //     console.log(window.innerWidth - this.draw_width)
-    //     if (this.CollapseState === true)
-    //       this.mainContainerSize =
-    //         window.innerWidth - this.draw_width - this.sidebar_width;
-    //     else
-    //       this.mainContainerSize = window.innerWidth - this.sidebar_width;
-    // }
   },
+  // beforeMount(){
+
+  // },
   data() {
     return {
       sidebar_width: 60, // 侧边菜单栏的宽度
@@ -242,7 +243,6 @@ export default {
     //     // Only set the code in editor. editor will sync to the store.
     //     this.initialCode = parseSourceCode(code);
     // });
-
     window.addEventListener("mousemove", (e) => {
       if (this.mousedown) {
         let percentage = e.clientX / window.innerWidth;
@@ -283,7 +283,7 @@ $pd-basic: 10px;
 $handler-width: 0px;
 
 // .demo-drawer {
-//   margin-left: 60px;
+//   overflow: visible;
 // }
 
 // #main-container {
@@ -439,7 +439,7 @@ $handler-width: 0px;
   }
 }
 
-.right-container {
+.main-container {
   position: absolute;
   right: 0;
 
@@ -449,7 +449,7 @@ $handler-width: 0px;
   // padding-left: $handler-width;
   border: none;
   z-index: 3000;
-
   background: $clr-bg;
 }
+
 </style>

@@ -43,7 +43,6 @@ export default {
         }),
       });
 
-      console.log(ncovData);
       this.map.on("click", (evt) => {
         let data = ncovData.add;
         this.showOverlayChart(evt.coordinate, data);

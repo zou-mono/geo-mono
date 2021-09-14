@@ -54,7 +54,7 @@ export default {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 20px;
     border-radius: 5px;
     background: #fff;
-    overflow: hidden;
+    overflow: visible;
 
     padding: 10px;
 

@@ -1,7 +1,8 @@
 import Vue from 'vue'
-import app from './App.vue'
+// import app from './App.vue'
 // import $ from 'jquery'
 import explore from '@v/Explore'
+import test from '@v/test'
 // import VueI18n from 'vue-i18n';
 // import messages from './common/i18n';
 // import zh from '@/common/zh';
@@ -10,7 +11,7 @@ import './registerServiceWorker'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@a/iconfont/iconfont.css'
 import { i18n } from '@/common/i18n'
-import router from '@/router/index.js'
+import router from '@/router/index'
 import store from '@/store'
 import VueScrollactive from 'vue-scrollactive'
 import ElementUI from 'element-ui'

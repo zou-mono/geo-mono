@@ -118,6 +118,6 @@ module.exports = {
             css: {}, // 这里的选项会传递给 css-loader
             // postcss: {} // 这里的选项会传递给 postcss-loader
         }, // css预设器配置项 详见https://cli.vuejs.org/zh/config/#css-loaderoptions
-        modules: false // 启用 CSS modules for all css / pre-processor files.
+        requireModuleExtension: true // 启用 CSS modules for all css / pre-processor files.
     }
 }
