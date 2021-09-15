@@ -5,10 +5,6 @@ const install = function(Vue) {
 }
 
 if (window.Vue) {
-    window['dragDrawer'] = drag
-}
-
-if (window.Vue) {
     window['el-drag-drawer'] = drag
     Vue.use(install); // eslint-disable-line
 }

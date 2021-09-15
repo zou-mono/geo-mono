@@ -7,20 +7,28 @@
     <!-- <el-tabs v-model="currentTab" type="card" @tab-click="handleClick"> -->
     <!-- <el-tab-pane label="界面" name="ui-editor"> :append-to-body=true :visible="CollapseState" -->
 
-          <!-- :style="{left: sidebar_width + 'px'}" -->
-              <!-- :style="{ transform: 'translate3d(' + sidebar_width + 'px,0,0)' }"   -->
+    <!-- :style="{left: sidebar_width + 'px'}" -->
+    <!-- :style="{ transform: 'translate3d(' + sidebar_width + 'px,0,0)' }"   -->
     <el-container>
       <el-aside :style="{ width: sidebar_width + 'px' }">
-        <el-button icon="el-icon-canshushezhi" @click="changeCollapseState">
-          数据
+        <el-button
+          class="btn-canshushezhi"
+          icon="el-icon-canshushezhi"
+          @click="changeCollapseState"
+        >
+          参数
         </el-button>
-        <el-button icon="el-icon-ditu" @click="changeCollapseState">
+        <el-button
+          class="btn-ditu"
+          icon="el-icon-ditu"
+          @click="changeCollapseState"
+        >
           地图
         </el-button>
       </el-aside>
       <el-main>
         <el-drawer
-          :style="{left: sidebar_width + 'px'}" 
+          :style="{ left: sidebar_width + 'px' }"
           v-drag-drawer
           title="我嵌套了表格!"
           :visible.sync="CollapseState"
@@ -31,107 +39,23 @@
           :modal-append-to-body="false"
           :append-to-body="true"
         >
-          <el-table :data="gridData">
-            <el-table-column
-              property="date"
-              label="日期"
-              width="150"
-            ></el-table-column>
-            <el-table-column
-              property="name"
-              label="姓名"
-              width="200"
-            ></el-table-column>
-            <el-table-column property="address" label="地址"></el-table-column>
-          </el-table>
+          <keep-alive>
+            <component :is="show_comp" v-show="CollapseState"></component>
+          </keep-alive>
+          <!-- <panel-od v-if="show_canshushezhi">
+          </panel-od>
+          <panel-ditu v-else-if="show_ditu">
+          </panel-ditu> -->
         </el-drawer>
         <Preview
           :inEditor="true"
           class="main-container"
           ref="preview"
           :style="{
-            width: mainContainerSize + 'px'
+            width: mainContainerSize + 'px',
           }"
         ></Preview>
       </el-main>
-      <!-- <el-main>
-          <el-button
-            class="btn-add-data"
-            icon="el-icon-circle-plus-outline"
-            type="text"
-            >{{ $t("editor.addData") }}
-          </el-button>
-          <el-collapse>
-            <el-collapse-item name="1">
-              <template slot="title">
-                <blockquote>起点</blockquote>
-              </template>
-              <el-form
-                class="parameter"
-                ref="form"
-                :model="form"
-                label-width="80px"
-              >
-                <el-form-item label="活动名称">
-                  <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="活动区域">
-                  <el-select v-model="form.region" placeholder="请选择活动区域">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="活动时间">
-                  <el-col :span="11">
-                    <el-date-picker
-                      type="date"
-                      placeholder="选择日期"
-                      v-model="form.date1"
-                      style="width: 100%"
-                    ></el-date-picker>
-                  </el-col>
-                  <el-col class="line" :span="2">-</el-col>
-                  <el-col :span="11">
-                    <el-time-picker
-                      placeholder="选择时间"
-                      v-model="form.date2"
-                      style="width: 100%"
-                    ></el-time-picker>
-                  </el-col>
-                </el-form-item>
-                <el-form-item label="即时配送">
-                  <el-switch v-model="form.delivery"></el-switch>
-                </el-form-item>
-                <el-form-item label="活动性质">
-                  <el-checkbox-group v-model="form.type">
-                    <el-checkbox
-                      label="美食/餐厅线上活动"
-                      name="type"
-                    ></el-checkbox>
-                    <el-checkbox label="地推活动" name="type"></el-checkbox>
-                    <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                    <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-                  </el-checkbox-group>
-                </el-form-item>
-                <el-form-item label="特殊资源">
-                  <el-radio-group v-model="form.resource">
-                    <el-radio label="线上品牌商赞助"></el-radio>
-                    <el-radio label="线下场地免费"></el-radio>
-                  </el-radio-group>
-                </el-form-item>
-                <el-form-item label="活动形式">
-                  <el-input type="textarea" v-model="form.desc"></el-input>
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" @click="onSubmit">
-                    立即创建
-                  </el-button>
-                  <el-button>取消</el-button>
-                </el-form-item>
-              </el-form>
-            </el-collapse-item>
-          </el-collapse> -->
-      <!-- </el-main> -->
     </el-container>
     <!-- </el-tab-pane> -->
     <!-- <el-tab-pane label="代码" name="code-editor"> -->
@@ -155,21 +79,20 @@
 // import {store} from '../common/store'
 import dragDrawer from "@/directives/drag-drawer"; // use clipboard by v-directive
 import Preview from "@c/Preview.vue";
+import panelOd from "@c/PanelOD.vue";
+import panelDitu from "@c/PanelMap.vue";
 
 export default {
   name: "editor",
   components: {
     Preview,
+    panelOd,
+    panelDitu,
   },
   directives: {
     dragDrawer,
   },
-  computed: {
-    // CollapseState: function() {
-    //   console.log(!this.isCollapse)
-    //   return !this.isCollapse
-    // }
-  },
+  computed: {},
   watch: {
     // CollapseState:  function() {
     //   if (this.CollapseState === true)
@@ -180,7 +103,6 @@ export default {
     //   else
     //     this.mainContainerSize = window.innerWidth - this.sidebar_width;
     // }
-
     // CollapseState:  function () {
     //     console.log(window.innerWidth - this.draw_width)
     //     if (this.CollapseState === true)
@@ -198,7 +120,11 @@ export default {
       sidebar_width: 70, // 侧边菜单栏的宽度
       draw_width: 600, // 左边抽屉组件的宽度
       table: false,
-      CollapseState: false,
+      CollapseState: false, //抽屉组件是否展开
+      show_comp: "", // 展开的组件名称
+      // show_canshushezhi: false, // 参数组件是否展开
+      // show_ditu: false, // 地图组件是否展开
+      m_last_click_button: "", // 上一次点击的按钮名称
 
       mousedown: false,
       mainContainerSize: window.innerWidth, // 整个el-main的宽度
@@ -215,43 +141,14 @@ export default {
         esm: true,
         node: false, // If is in node
       },
-
-      gridData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-      ],
-
-      form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
-      },
     };
   },
+  updated() {},
   mounted() {
+    let wrapper = this.$el.querySelector(".el-drawer__wrapper");
+    let dragDom = this.$el.querySelector(".el-drawer");
+    if (dragDom != null && wrapper != null)
+      wrapper.style.width = dragDom.style.width;
     // loadExampleCode().then(code => {
     //     // Only set the code in editor. editor will sync to the store.
     //     this.initialCode = parseSourceCode(code);
@@ -269,16 +166,37 @@ export default {
     });
   },
   methods: {
-    changeCollapseState() {
-      this.CollapseState = !this.CollapseState;
-      // this.$emit("update:table", this.CollapseState)
+    changeCollapseState(event) {
+      // this.CollapseState = !this.CollapseState;
+      let bChange = false; // 是否切换了按钮
+      let current_click_button = event.currentTarget.className;
 
-      if (this.CollapseState === true) {
-        let wrapper = this.$el.querySelector('.el-drawer__wrapper')
-        let dragDom = this.$el.querySelector('.el-drawer')
-        wrapper.style.width = dragDom.style.width
-        // console.log(wrapper.style.width)
+      if (this.m_last_click_button != current_click_button) {
+        bChange = true;
       }
+
+      this.m_last_click_button = event.currentTarget.className;
+
+      if (!bChange) {
+        this.CollapseState = !this.CollapseState;
+      } else {
+        this.show_canshushezhi = false;
+        this.show_ditu = false;
+
+        if (event.currentTarget.className.indexOf("btn-canshushezhi") != -1) {
+          this.CollapseState = true;
+          this.show_comp = "panelOd";
+          // this.show_canshushezhi = true
+        } else if (event.currentTarget.className.indexOf("btn-ditu") != -1) {
+          this.CollapseState = true;
+          this.show_comp = "panelDitu";
+          // this.show_ditu = true
+        } else {
+          this.CollapseState = false;
+        }
+      }
+      console.log(`show_ditu: ${this.show_ditu}`);
+      console.log(`show_canshushezhi: ${this.show_canshushezhi}`);
     },
 
     onSplitterDragStart() {
@@ -472,7 +390,8 @@ $handler-width: 0px;
   background: $clr-bg;
 }
 
-.el-icon-canshushezhi, .el-icon-ditu{
+.el-icon-canshushezhi,
+.el-icon-ditu {
   font-size: 24px;
 }
 </style>
