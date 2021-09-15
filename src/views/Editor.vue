@@ -12,16 +12,16 @@
     <el-container>
       <el-aside :style="{ width: sidebar_width + 'px' }">
         <el-button
-          class="btn-canshushezhi"
+          :class="index === 1 ? 'active' : ''"
           icon="el-icon-canshushezhi"
-          @click="changeCollapseState"
+          @click="changeCollapseState(1)"
         >
           参数
         </el-button>
         <el-button
-          class="btn-ditu"
+          :class="index === 2 ? 'active' : ''"
           icon="el-icon-ditu"
-          @click="changeCollapseState"
+          @click="changeCollapseState(2)"
         >
           地图
         </el-button>
@@ -120,6 +120,7 @@ export default {
       sidebar_width: 70, // 侧边菜单栏的宽度
       draw_width: 600, // 左边抽屉组件的宽度
       table: false,
+      index: 0, // 点击的按钮顺序
       CollapseState: false, //抽屉组件是否展开
       show_comp: "", // 展开的组件名称
       // show_canshushezhi: false, // 参数组件是否展开
@@ -166,37 +167,16 @@ export default {
     });
   },
   methods: {
-    changeCollapseState(event) {
-      // this.CollapseState = !this.CollapseState;
-      let bChange = false; // 是否切换了按钮
-      let current_click_button = event.currentTarget.className;
-
-      if (this.m_last_click_button != current_click_button) {
-        bChange = true;
-      }
-
-      this.m_last_click_button = event.currentTarget.className;
-
-      if (!bChange) {
+    changeCollapseState(value) {
+      if (this.index === value) {
+        this.index = 0;
         this.CollapseState = !this.CollapseState;
       } else {
-        this.show_canshushezhi = false;
-        this.show_ditu = false;
-
-        if (event.currentTarget.className.indexOf("btn-canshushezhi") != -1) {
-          this.CollapseState = true;
-          this.show_comp = "panelOd";
-          // this.show_canshushezhi = true
-        } else if (event.currentTarget.className.indexOf("btn-ditu") != -1) {
-          this.CollapseState = true;
-          this.show_comp = "panelDitu";
-          // this.show_ditu = true
-        } else {
-          this.CollapseState = false;
-        }
+        this.index = value;
+        this.CollapseState = true;
       }
-      console.log(`show_ditu: ${this.show_ditu}`);
-      console.log(`show_canshushezhi: ${this.show_canshushezhi}`);
+      if (value === 1) this.show_comp = "panelOd";
+      if (value === 2) this.show_comp = "panelDitu";
     },
 
     onSplitterDragStart() {
