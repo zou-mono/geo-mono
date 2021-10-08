@@ -56,7 +56,7 @@ export default {
     background: #fff;
     overflow: visible;
 
-    padding: 10px;
+    padding: 0px;
 
     transition: width 2s;
 

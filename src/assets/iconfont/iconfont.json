@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "10885919",
+      "name": "保存",
+      "font_class": "baocun",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "1059049",
+      "name": "脚本",
+      "font_class": "jiaoben",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
       "icon_id": "22376133",
       "name": "地图",
       "font_class": "ditu",

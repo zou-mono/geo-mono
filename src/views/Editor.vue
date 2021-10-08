@@ -16,7 +16,7 @@
           icon="el-icon-canshushezhi"
           @click="changeCollapseState(1)"
         >
-          参数
+          设置
         </el-button>
         <el-button
           :class="index === 2 ? 'active' : ''"
@@ -24,6 +24,20 @@
           @click="changeCollapseState(2)"
         >
           地图
+        </el-button>
+        <el-button
+          :class="index === 3 ? 'active' : ''"
+          icon="el-icon-jiaoben"
+          @click="changeCollapseState(3)"
+        >
+          代码
+        </el-button>
+        <el-button
+          :class="index === 4 ? 'active' : ''"
+          icon="el-icon-baocun"
+          @click="changeCollapseState(4)"
+        >
+          保存
         </el-button>
       </el-aside>
       <el-main>
@@ -57,21 +71,6 @@
         ></Preview>
       </el-main>
     </el-container>
-    <!-- </el-tab-pane> -->
-    <!-- <el-tab-pane label="代码" name="code-editor"> -->
-    <!-- <el-container>
-            <el-header id="full-code-control-panel"> 北部 </el-header>
-          </el-container> -->
-    <!-- </el-tab-pane> -->
-    <!-- </el-tabs> -->
-    <!-- </div> -->
-    <!-- <div
-      class="handler"
-      id="h-handler"
-      @mousedown="onSplitterDragStart"
-      :style="{ left: leftContainerSize + '%' }"
-      v-if="!shared.isMobile"
-    ></div> -->
   </div>
 </template>
 
@@ -175,8 +174,14 @@ export default {
         this.index = value;
         this.CollapseState = true;
       }
-      if (value === 1) this.show_comp = "panelOd";
-      if (value === 2) this.show_comp = "panelDitu";
+      if (value === 1) {
+        this.show_comp = "panelOd";
+      }
+      if (value === 2) {
+        this.show_comp = "panelDitu";
+      }
+      if (value === 3) this.show_comp = "panelDitu";
+      if (value === 4) this.show_comp = "panelDitu";
     },
 
     onSplitterDragStart() {
@@ -371,7 +376,9 @@ $handler-width: 0px;
 }
 
 .el-icon-canshushezhi,
-.el-icon-ditu {
+.el-icon-ditu,
+.el-icon-jiaoben,
+.el-icon-baocun {
   font-size: 24px;
 }
 </style>

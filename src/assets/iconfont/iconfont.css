@@ -1,21 +1,31 @@
 @font-face {
-    font-family: "element-icons";
-    /* Project id 2812329 */
-    src: url('iconfont.woff2?t=1631609557442') format('woff2'), url('iconfont.woff?t=1631609557442') format('woff'), url('iconfont.ttf?t=1631609557442') format('truetype');
+  font-family: "element-icons"; /* Project id 2812329 */
+  src: url('iconfont.woff2?t=1632391444759') format('woff2'),
+       url('iconfont.woff?t=1632391444759') format('woff'),
+       url('iconfont.ttf?t=1632391444759') format('truetype');
 }
 
 .element-icons {
-    font-family: "element-icons" !important;
-    font-size: 16px;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-family: "element-icons" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.el-icon-baocun:before {
+  content: "\e611";
+}
+
+.el-icon-jiaoben:before {
+  content: "\e681";
 }
 
 .el-icon-ditu:before {
-    content: "\ed99";
+  content: "\ed99";
 }
 
 .el-icon-canshushezhi:before {
-    content: "\e62d";
+  content: "\e62d";
 }
+
