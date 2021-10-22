@@ -5,17 +5,17 @@
         <p class='map_name'>高德地图</p>
       </div>
       <div class="item item-baidu">
-        <img src=/img/data/thumb/area-basic.png @click="baidu_Clicked">
+        <img src=/img/data/thumb/area-basic.png @click="baidu_road_Clicked">
         <p class='map_name'>百度地图</p>
       </div>
       <div class="item item-osm">
         <img src=/img/data/thumb/area-basic.png @click="osm_Clicked">
         <p class='map_name'>OSM街道地图</p>
       </div>
-      <div class="item item-bing">
+      <!-- <div class="item item-bing">
         <img src=/img/data/thumb/area-basic.png @click="bing_Clicked">
         <p class='map_name'>bing街道地图</p>
-      </div>
+      </div> -->
       <div class="item item-esri-dark">
         <img src=/img/data/thumb/area-basic.png @click="esri_dark_Clicked">
         <p class='map_name'>蓝黑地图</p>
@@ -74,15 +74,15 @@ export default {
     osm_Clicked(){
       this.$store.state.mapMode = 'osm'
     },
-    baidu_Clicked(){
-      this.$store.state.mapMode = 'baidu'
+    baidu_road_Clicked(){
+      this.$store.state.mapMode = 'baidu-road'
     },
     esri_dark_Clicked() {
       this.$store.state.mapMode = 'esri-dark'
     },
-    bing_Clicked() {
-      this.$store.state.mapMode = 'bing'
-    },
+    // bing_Clicked() {
+    //   this.$store.state.mapMode = 'bing'
+    // },
     color_map_Clicked() {
       this.$store.state.mapMode = 'color-map'
     },
