@@ -1,9 +1,9 @@
 <template>
-<div :class="[(inEditor) ? '' : 'full']">
+  <div :class="[inEditor ? '' : 'full']">
     <div id="editor-right-container" v-if="!shared.isMobile">
       <!-- <img src="../assets/logo.png" style="width:100%;min-height:100%"/> -->
-      <map-view></map-view>
-        <!-- <div class="chart-container"></div> -->
+      <map-view :mapMode="shared.mapMode"></map-view>
+      <!-- <div class="chart-container"></div> -->
       <!-- <el-tabs v-model="currentTab" type="card" @tab-click="handleClick">
         <el-tab-pane label="界面" name="ui-editor">
           <el-container>
@@ -19,60 +19,71 @@
         </el-tab-pane>
       </el-tabs> -->
     </div>
-</div>
+  </div>
 </template>
 
 <script>
-import mapView from '@c/mapView'
+import mapView from "@c/mapView";
 
 export default {
-    props: ['inEditor'],
+  props: ["inEditor"],
 
-    components: {mapView},
+  components: { mapView },
 
-    data() {
-        return {
-            shared: this.$store.state,
-            debouncedTime: undefined,
-            backgroundColor: '',
-            autoRun: true,
-            loading: false,
-        }
-    }
-}
+  data() {
+    return {
+      shared: this.$store.state,
+      debouncedTime: undefined,
+      backgroundColor: "",
+      autoRun: true,
+      loading: false,
+    };
+  },
+
+  watch: {
+    // "shared.mapMode"(val) {
+    //   if (val === "esri-dark") {
+    //     this.shared.mapMode =
+    //   } else if (val === "osm") {
+    //     this.esriLayer.visible = false;
+    //     this.osmLayer.visible = true;
+    //   }
+    // },
+  },
+};
 </script>
 
 <style lang="scss">
 #editor-right-container {
-    position: absolute;
-    // top: $control-panel-height;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    box-sizing: border-box;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 20px;
-    border-radius: 5px;
-    background: #fff;
-    overflow: visible;
+  position: absolute;
+  // top: $control-panel-height;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  box-sizing: border-box;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 20px;
+  border-radius: 5px;
+  background: #fff;
+  overflow: visible;
 
-    padding: 0px;
+  padding: 0px;
 
-    transition: width 2s;
+  transition: width 2s;
 
-    // .chart-container {
-    //     position: relative;
-    //     height: 100%;
-    // }
+  // .chart-container {
+  //     position: relative;
+  //     height: 100%;
+  // }
 }
 
 .full {
-    #chart-panel {
-        top: 40px;
-        right: 5px;
-        bottom: 5px;
-        left: 5px;
-        box-shadow: rgba(10, 9, 9, 0.1) 0px 0px 5px;
-    }
+  #chart-panel {
+    top: 40px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    box-shadow: rgba(10, 9, 9, 0.1) 0px 0px 5px;
+  }
 }
 </style>
