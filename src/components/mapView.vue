@@ -24,7 +24,8 @@ const OverlayChart = Vue.extend(overlayChart);
 export default {
   data() {
     return {
-      map1: undefined,
+      map_id: "map",
+      map: undefined,
       overlayChartObj: undefined,
       esriDarkLayer: undefined,
       osmLayer: undefined,
@@ -33,7 +34,20 @@ export default {
       colorLayer: undefined,
       warmLayer: undefined,
       grayLayer: undefined,
-      // tdtSatelliteLayer: undefined
+      tdtSatelliteLayer: undefined,
+      tdtSatelliteAnnoLayer: undefined,
+      map_baseOption: {
+        target: "map",
+        layers: [],
+        view: new View({
+          projection: "EPSG:3857",
+          center: fromLonLat([114.08, 22.6]),
+          // center: [0, 0],
+          constrainResolution: true, // 增加这个参数可以避免缩放时候字体过小或者模糊
+          zoom: 10,
+          maxZoom: 16
+        }),
+      },
     };
   },
   props: ["mapMode"],
@@ -42,77 +56,38 @@ export default {
   },
   watch: {
     mapMode: function (val) {
+      this.osmLayer.setVisible(false);
+      this.esriDarkLayer.setVisible(false);
+      this.bingLayer.setVisible(false);
+      this.amapRoadLayer.setVisible(false);
+      this.colorLayer.setVisible(false);
+      this.warmLayer.setVisible(false);
+      this.grayLayer.setVisible(false);
+      this.tdtSatelliteLayer.setVisible(false);
+      this.tdtSatelliteAnnoLayer.setVisible(false);
+      
       if (val === "esri-dark") {
-        this.osmLayer.setVisible(false);
         this.esriDarkLayer.setVisible(true);
-        this.bingLayer.setVisible(false);
-        this.amapRoadLayer.setVisible(false);
-        this.colorLayer.setVisible(false);
-        this.warmLayer.setVisible(false);
-        this.grayLayer.setVisible(false);
-        // this.tdtSatelliteLayer.setVisible(false);
+        this.map.getView().setMaxZoom(16)
       } else if (val === "osm") {
         this.osmLayer.setVisible(true);
-        this.esriDarkLayer.setVisible(false);
-        this.bingLayer.setVisible(false);
-        this.amapRoadLayer.setVisible(false);
-        this.colorLayer.setVisible(false);
-        this.warmLayer.setVisible(false);
-        this.grayLayer.setVisible(false);
-        // this.tdtSatelliteLayer.setVisible(false);
-      } else if (val === "bing") {
-        this.osmLayer.setVisible(false);
-        this.esriDarkLayer.setVisible(false);
-        this.bingLayer.setVisible(true);
-        this.amapRoadLayer.setVisible(false);
-        this.colorLayer.setVisible(false);
-        this.warmLayer.setVisible(false);
-        this.grayLayer.setVisible(false);
-        // this.tdtSatelliteLayer.setVisible(false);
+        this.map.getView().setMaxZoom(18)
       } else if (val === "amap-road") {
-        this.osmLayer.setVisible(false);
-        this.esriDarkLayer.setVisible(false);
-        this.bingLayer.setVisible(false);
         this.amapRoadLayer.setVisible(true);
-        this.colorLayer.setVisible(false);
-        this.grayLayer.setVisible(false);
-        this.tdtSatelliteLayer.setVisible(false);
+        this.map.getView().setMaxZoom(18)
       } else if (val === "color-map") {
-        this.osmLayer.setVisible(false);
-        this.esriDarkLayer.setVisible(false);
-        this.bingLayer.setVisible(false);
-        this.amapRoadLayer.setVisible(false);
         this.colorLayer.setVisible(true);
-        this.warmLayer.setVisible(false);
-        this.grayLayer.setVisible(false);
-        this.tdtSatelliteLayer.setVisible(false);
+        this.map.getView().setMaxZoom(16)
       } else if (val === "warm-map") {
-        this.osmLayer.setVisible(false);
-        this.esriDarkLayer.setVisible(false);
-        this.bingLayer.setVisible(false);
-        this.amapRoadLayer.setVisible(false);
-        this.colorLayer.setVisible(false);
         this.warmLayer.setVisible(true);
-        this.grayLayer.setVisible(false);
-        this.tdtSatelliteLayer.setVisible(false);
+        this.map.getView().setMaxZoom(16)
       } else if (val === "gray-map") {
-        this.osmLayer.setVisible(false);
-        this.esriDarkLayer.setVisible(false);
-        this.bingLayer.setVisible(false);
-        this.amapRoadLayer.setVisible(false);
-        this.colorLayer.setVisible(false);
-        this.warmLayer.setVisible(false);
         this.grayLayer.setVisible(true);
-        this.tdtSatelliteLayer.setVisible(false);
+        this.map.getView().setMaxZoom(16)
       } else if (val === "tdt-satellite-map") {
-        this.osmLayer.setVisible(false);
-        this.esriDarkLayer.setVisible(false);
-        this.bingLayer.setVisible(false);
-        this.amapRoadLayer.setVisible(false);
-        this.colorLayer.setVisible(false);
-        this.warmLayer.setVisible(false);
-        this.grayLayer.setVisible(false);
         this.tdtSatelliteLayer.setVisible(true);
+        this.tdtSatelliteAnnoLayer.setVisible(true);
+        this.map.getView().setMaxZoom(18)
       } 
     },
   },
@@ -213,13 +188,14 @@ export default {
       //         url: "http://t4.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=b04ac957fe91b9c0e78877230acefe24"
       //     })
       // });
-      // //天地图注记
-      // this.tdtAnnotationLayer = new TileLayer({
-      //     title: "天地图文字标注",
-      //     source: new XYZ({
-      //         url: 'http://t3.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=b04ac957fe91b9c0e78877230acefe24'
-      //     })
-      // });
+      //天地图注记
+      this.tdtSatelliteAnnoLayer = new TileLayer({
+          title: "天地图文字标注",
+          source: new XYZ({
+              url: 'http://t{0-7}.tianditu.com/DataServer?T=cia_w&x={x}&y={y}&l={z}&tk=b04ac957fe91b9c0e78877230acefe24'
+          }),
+          visible: false
+      });
       //天地图卫星影像
       this.tdtSatelliteLayer = new TileLayer({
           title: "天地图卫星影像",
@@ -280,28 +256,17 @@ export default {
         visible: false,
       });
 
-      this.map = new Map({
-        target: "map",
-        layers: [
-          this.osmLayer,
-          this.bingLayer,
-          this.amapRoadLayer,
-          this.colorLayer,
-          this.esriDarkLayer,
-          this.warmLayer,
-          this.grayLayer,
-          this.tdtSatelliteLayer
-        ],
-        view: new View({
-          projection: "EPSG:3857",
-          center: fromLonLat([114.08, 22.6]),
-          // center: [0, 0],
-          constrainResolution: true, // 增加这个参数可以避免缩放时候字体过小或者模糊
-          zoom: 10,
-          maxZoom: 18,
-          // center: [114.08, 22.6],
-        }),
-      });
+      this.map_baseOption.layers = [
+        this.esriDarkLayer,
+        this.osmLayer,
+        this.amapRoadLayer,
+        this.warmLayer,
+        this.colorLayer, 
+        this.grayLayer,
+        this.tdtSatelliteLayer,
+        this.tdtSatelliteAnnoLayer
+      ]
+      this.map = new Map(this.map_baseOption)
 
       this.map.on("click", (evt) => {
         let data = ncovData.add;
