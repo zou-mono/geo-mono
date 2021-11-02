@@ -38,7 +38,9 @@ export default {
       this.visible = true
     },
     close () {
-      this.visible = false
+      this.visible = false;
+      this.map.removeOverlay(this.overlay)
+      // this.$destroy();
     }
   }
 }
