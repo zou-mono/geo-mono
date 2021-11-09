@@ -36,6 +36,10 @@
         <img src=/img/data/thumb/area-basic.png @click="tdt_satellite_Clicked">
         <p class='map_name'>天地图卫星图</p>
       </div>
+      <div class="item item-tdt-satellite">
+        <img src=/img/data/thumb/area-basic.png @click="shade_map_Clicked">
+        <p class='map_name'>山影地图</p>
+      </div>
   </div>
 </template>
 
@@ -94,6 +98,9 @@ export default {
     },
     tdt_satellite_Clicked() {
       this.$store.state.mapMode = 'tdt-satellite-map'
+    },
+    shade_map_Clicked() {
+      this.$store.state.mapMode = 'shade-map'
     }
   },
 };

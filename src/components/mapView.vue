@@ -6,6 +6,7 @@ import Vue from "vue";
 import { Map, View } from "ol";
 import "ol/ol.css";
 import TileLayer from "ol/layer/Tile";
+import VectorTileLayer from 'ol/layer/VectorTile';
 import XYZ from "ol/source/XYZ";
 import overlayChart from "./overlayChart";
 import ncovData from "../data/ncovData.js";
@@ -25,6 +26,11 @@ import WMTSTileGrid from "ol/tilegrid/WMTS";
 import TileGrid from "ol/tilegrid/TileGrid";
 import TileImage from 'ol/source/TileImage'
 import { applyTransform } from "ol/extent";
+import VectorTile from 'ol/source/VectorTile'
+import MVT from 'ol/format/MVT';
+import apply from 'ol-mapbox-style';
+import olms from 'ol-mapbox-style';
+// import Tile from 'ol/source/Tile'
 
 const OverlayChart = Vue.extend(overlayChart);
 
@@ -44,9 +50,13 @@ export default {
       tdtSatelliteLayer: undefined,
       tdtSatelliteAnnoLayer: undefined,
       bdRoadLayer: undefined,
+      shadeLayer: undefined,
+      // vectorTopoLayer: undefined,
+
       map_baseOption: {
         target: "map",
         layers: [],
+        // pixelRatio: window.devicePixelRatio * 2, 
         view: new View({
           projection: "EPSG:3857",
           center: fromLonLat([114.08, 22.6]),
@@ -64,6 +74,8 @@ export default {
     this.init();
   },
   watch: {
+    // basemapURL = "https://basemaps-api.arcgis.com/arcgis/rest/services/styles/" + basemapId + "?type=style&token=" + apiKey
+
     mapMode: function (val) {
       this.osmLayer.setVisible(false);
       this.esriDarkLayer.setVisible(false);
@@ -75,13 +87,23 @@ export default {
       this.tdtSatelliteLayer.setVisible(false);
       this.tdtSatelliteAnnoLayer.setVisible(false);
       this.bdRoadLayer.setVisible(false);
+      this.shadeLayer.setVisible(false);
+
+      const layers = this.map.getLayers().getArray();
+      for (let i = layers.length - 1; i >= 0; --i) {
+        if (layers[i].get('mapbox-source')) {
+          console.log(layers[i])
+          this.map.removeLayer(layers[i]);
+        }
+      };
+      // this.vectorTopoLayer.setVisible(false);
 
       if (val === "esri-dark") {
         this.esriDarkLayer.setVisible(true);
         this.map.getView().setMaxZoom(16);
       } else if (val === "osm") {
         this.osmLayer.setVisible(true);
-        this.map.getView().setMaxZoom(18);
+        this.map.getView().setMaxZoom(19);
       } else if (val === "amap-road") {
         this.amapRoadLayer.setVisible(true);
         this.map.getView().setMaxZoom(18);
@@ -101,6 +123,22 @@ export default {
       } else if (val === "baidu-road") {
         this.bdRoadLayer.setVisible(true);
         this.map.getView().setMaxZoom(18);
+      } else if (val === "shade-map") {
+        this.shadeLayer.setVisible(true);
+        // this.vectorTopoLayer.setVisible(true);
+        // olms(this.map, 'https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer/resources/styles/root.json');
+        // fetch('https://basemaps-api.arcgis.com/arcgis/rest/services/styles/fd66a29879c44a288d2b117ad5da2b87?type=style&token=AAPK99491a76728e419a80b189671988d83e3o6To5dT7hFcxSYvPIaUqMDk_B1e3wDZrYxtCOd-zS17TWIYF_vUXneKOiLJ6BIa').then((response) => {
+        //     response.json().then((glStyle) => {
+        //         // debugger
+        //         apply(this.map, glStyle)//map为ol map实例，参考官方文档
+        //     });
+        // });
+        olms(
+          this.map,
+          'https://basemaps-api.arcgis.com/arcgis/rest/services/styles/fd66a29879c44a288d2b117ad5da2b87?type=style&token=AAPK99491a76728e419a80b189671988d83e3o6To5dT7hFcxSYvPIaUqMDk_B1e3wDZrYxtCOd-zS17TWIYF_vUXneKOiLJ6BIa'
+          // "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/2020_USA_Median_Age/VectorTileServer/resources/styles/root.json"
+        );
+        this.map.getView().setMaxZoom(19);        
       }
     },
   },
@@ -262,6 +300,26 @@ export default {
         );
       });
 
+      // let baiduSource = new XYZ({
+      //   projection: "bd-09",
+      //   wrapX: true,
+      //   url:
+      //     "http://maponline{0-3}.bdimg.com/tile/?qt=vtile&x={x}&y={y}&z={z}&styles=pl&scaler=1&udt=20191119",
+      //   tileGrid: new TileGrid({
+      //     minZoom: 3,
+      //     resolutions: bmercResolutions,
+      //     origin: [0, 0],
+      //     extent: applyTransform(baiduExtent, projzh.ll2bmerc),
+      //   })
+      // });
+      // var xyzTileUrlFunction = baiduSource.getTileUrlFunction();
+      // var tmsTileUrlFunction = function([z, x, y]) {
+      //   return xyzTileUrlFunction([z, x, -y - 1]);
+      // };
+      // baiduSource.setTileUrlFunction(tmsTileUrlFunction);
+      // this.bdRoadLayer = new Tile({
+      //   source: baiduSource
+      // });
       this.bdRoadLayer = new TileLayer({
         title: "百度路网地图",
         visible: false,
@@ -345,6 +403,25 @@ export default {
         visible: false,
       });
 
+      // 山影地图
+      this.shadeLayer = new TileLayer({
+        source: new XYZ({
+          url: "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",
+          projection: gcjMecator,
+          maxZoom: 13,
+        }),
+        visible: false,
+      });
+      // this.vectorTopoLayer = new VectorTileLayer({
+      //   source: new VectorTile({
+      //     format: new MVT(),
+      //     url: "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer/tile/{z}/{y}/{x}.pbf",
+      //     // projection: gcjMecator,
+      //     maxZoom: 19,
+      //   }),
+      //   visible: false,
+      // });
+
       this.map_baseOption.layers = [
         this.esriDarkLayer,
         this.osmLayer,
@@ -354,7 +431,9 @@ export default {
         this.grayLayer,
         this.tdtSatelliteLayer,
         this.tdtSatelliteAnnoLayer,
-        this.bdRoadLayer
+        this.bdRoadLayer,
+        this.shadeLayer,
+        // this.vectorTopoLayer
       ];
       this.map = new Map(this.map_baseOption);
 
