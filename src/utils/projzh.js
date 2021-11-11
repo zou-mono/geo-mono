@@ -1,3 +1,6 @@
+import Projection from "ol/proj/Projection";
+import { applyTransform } from "ol/extent";
+
 var projzh = {};
 
 var forEachPoint = function(func) {
@@ -304,21 +307,21 @@ bd09.fromWGS84 = function(input, opt_output, opt_dimension) {
 // 高德地图
 projzh.ll2gmerc = function(input, opt_output, opt_dimension) {
     let output = gcj02.fromWGS84(input, opt_output, opt_dimension);
-    return projzh.ll2smerc(output, output, opt_dimension);
+    return sphericalMercator.forward(output, output, opt_dimension);
 };
 projzh.gmerc2ll = function(input, opt_output, opt_dimension) {
-    let output = projzh.smerc2ll(input, input, opt_dimension);
+    let output = sphericalMercator.inverse(input, input, opt_dimension);
     return gcj02.toWGS84(output, opt_output, opt_dimension);
 };
 projzh.smerc2gmerc = function(input, opt_output, opt_dimension) {
-    let output = projzh.smerc2ll(input, input, opt_dimension);
+    let output = sphericalMercator.inverse(input, input, opt_dimension);
     output = gcj02.fromWGS84(output, output, opt_dimension);
-    return projzh.ll2smerc(output, output, opt_dimension);
+    return sphericalMercator.forward(output, output, opt_dimension);
 };
 projzh.gmerc2smerc = function(input, opt_output, opt_dimension) {
-    let output = projzh.smerc2ll(input, input, opt_dimension);
+    let output = sphericalMercator.inverse(input, input, opt_dimension);
     output = gcj02.toWGS84(output, output, opt_dimension);
-    return projzh.ll2smerc(output, output, opt_dimension);
+    return sphericalMercator.forward(output, output, opt_dimension);
 };
 
 // 百度地图
@@ -347,4 +350,24 @@ projzh.ll2bmerc = function(input, opt_output, opt_dimension) {
 projzh.ll2smerc = sphericalMercator.forward;
 projzh.smerc2ll = sphericalMercator.inverse;
 
-export default projzh
+var projParams = {}
+
+const gcj02Extent = [-180.0, -85.0511287798066, 180.0, 85.0511287798066]
+projzh.gcjMecatorProj = new Projection({
+    code: "GCJ-02",
+    extent: applyTransform(gcj02Extent, projzh.ll2smerc),
+    units: "m",
+});
+
+const baiduExtent = [72.004, 0.8293, 137.8347, 55.8271];
+projzh.baiduMercatorProj = new Projection({
+    code: "bd-09",
+    extent: applyTransform(baiduExtent, projzh.ll2bmerc),
+    units: "m",
+});
+
+projParams.gcj02Extent = gcj02Extent
+projParams.baiduExtent = baiduExtent
+
+export var projzh
+export var projParams

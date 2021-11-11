@@ -12,28 +12,28 @@
     <el-container>
       <el-aside :style="{ width: sidebar_width + 'px' }">
         <el-button
-          :class="index === 1 ? 'active' : ''"
+          :class="index === 1 ? 'is-active' : ''"
           icon="el-icon-canshushezhi"
           @click="changeCollapseState(1)"
         >
           设置
         </el-button>
         <el-button
-          :class="index === 2 ? 'active' : ''"
+          :class="index === 2 ? 'is-active' : ''"
           icon="el-icon-ditu"
           @click="changeCollapseState(2)"
         >
           地图
         </el-button>
         <el-button
-          :class="index === 3 ? 'active' : ''"
+          :class="index === 3 ? 'is-active' : ''"
           icon="el-icon-jiaoben"
           @click="changeCollapseState(3)"
         >
           代码
         </el-button>
         <el-button
-          :class="index === 4 ? 'active' : ''"
+          :class="index === 4 ? 'is-active' : ''"
           icon="el-icon-baocun"
           @click="changeCollapseState(4)"
         >
@@ -271,9 +271,10 @@ $handler-width: 0px;
       margin-left: 0px;
     }
 
-    // .el-button:hover{
-    //   background-color: $clr-deep;
-    // }
+    .el-button.is-active {
+      border-color: #c6e2ff;
+      background-color: #ecf5ff
+    }
   }
   // }
 

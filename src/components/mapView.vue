@@ -13,7 +13,7 @@ import ncovData from "../data/ncovData.js";
 import OSM from "ol/source/OSM";
 import BingMaps from "ol/source/BingMaps";
 import { fromLonLat } from "ol/proj";
-import projzh from "../utils/projzh";
+import {projzh, projParams} from "../utils/projzh";
 import Projection from "ol/proj/Projection";
 import {
   addProjection,
@@ -30,6 +30,7 @@ import VectorTile from 'ol/source/VectorTile'
 import MVT from 'ol/format/MVT';
 import apply from 'ol-mapbox-style';
 import olms from 'ol-mapbox-style';
+import VectorTileSource from 'ol/source/VectorTile';
 // import Tile from 'ol/source/Tile'
 
 const OverlayChart = Vue.extend(overlayChart);
@@ -52,7 +53,6 @@ export default {
       bdRoadLayer: undefined,
       shadeLayer: undefined,
       // vectorTopoLayer: undefined,
-
       map_baseOption: {
         target: "map",
         layers: [],
@@ -92,7 +92,6 @@ export default {
       const layers = this.map.getLayers().getArray();
       for (let i = layers.length - 1; i >= 0; --i) {
         if (layers[i].get('mapbox-source')) {
-          console.log(layers[i])
           this.map.removeLayer(layers[i]);
         }
       };
@@ -137,8 +136,30 @@ export default {
           this.map,
           'https://basemaps-api.arcgis.com/arcgis/rest/services/styles/fd66a29879c44a288d2b117ad5da2b87?type=style&token=AAPK99491a76728e419a80b189671988d83e3o6To5dT7hFcxSYvPIaUqMDk_B1e3wDZrYxtCOd-zS17TWIYF_vUXneKOiLJ6BIa'
           // "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/2020_USA_Median_Age/VectorTileServer/resources/styles/root.json"
-        );
-        this.map.getView().setMaxZoom(19);        
+        )
+        // olms(
+        //   this.map,
+        //   'https://basemaps-api.arcgis.com/arcgis/rest/services/styles/fd66a29879c44a288d2b117ad5da2b87?type=style&token=AAPK99491a76728e419a80b189671988d83e3o6To5dT7hFcxSYvPIaUqMDk_B1e3wDZrYxtCOd-zS17TWIYF_vUXneKOiLJ6BIa'
+        // ).then(function(map){
+        //     const mapboxStyle = map.get('mapbox-style');
+        //     map.getLayers().forEach(function (layer) {
+        //       const mapboxSource = layer.get('mapbox-source');
+        //       if (mapboxSource && mapboxStyle.sources[mapboxSource].type === 'vector') {
+        //         console.log(projzh.gcjMecatorProj)
+        //         const source = layer.getSource();
+        //         layer.setSource(
+        //           new VectorTileSource({
+        //             format: new MVT(),
+        //             urls: source.getUrls(),
+        //             // projection: projzh.gcjMecatorProj,
+        //             maxZoom: 19
+        //           })
+        //         )
+        //       }
+        //     });   
+        // });
+
+        this.map.getView().setMaxZoom(19);
       }
     },
   },
@@ -185,45 +206,34 @@ export default {
      * 地图初始化
      */
     init() {
-      const gcj02Extent = [
-        -20037508.342789244, -20037508.342789244, 20037508.342789244,
-        20037508.342789244,
-      ];
-      const gcjMecator = new Projection({
-        code: "GCJ-02",
-        extent: gcj02Extent,
-        units: "m",
-      });
-      addProjection(gcjMecator);
+      // const gcj02Extent = [
+      //   -20037508.342789244, -20037508.342789244, 20037508.342789244,
+      //   20037508.342789244,
+      // ];
+      addProjection(projzh.gcjMecatorProj);
       addCoordinateTransforms(
         "EPSG:4326",
-        gcjMecator,
+        projzh.gcjMecatorProj,
         projzh.ll2gmerc,
         projzh.gmerc2ll
       );
       addCoordinateTransforms(
         "EPSG:3857",
-        gcjMecator,
+        projzh.gcjMecatorProj,
         projzh.smerc2gmerc,
         projzh.gmerc2smerc
       );
 
-      const baiduExtent = [72.004, 0.8293, 137.8347, 55.8271];
-      var baiduMercatorProj = new Projection({
-        code: "bd-09",
-        extent: applyTransform(baiduExtent, projzh.ll2bmerc),
-        units: "m",
-      });
-      addProjection(baiduMercatorProj);
+      addProjection(projzh.baiduMercatorProj);
       addCoordinateTransforms(
         "EPSG:4326",
-        baiduMercatorProj,
+        projzh.baiduMercatorProj,
         projzh.ll2bmerc,
         projzh.bmerc2ll
       );
       addCoordinateTransforms(
         "EPSG:3857",
-        baiduMercatorProj,
+        projzh.baiduMercatorProj,
         projzh.smerc2bmerc,
         projzh.bmerc2smerc
       );
@@ -231,7 +241,7 @@ export default {
       this.esriDarkLayer = new TileLayer({
         source: new XYZ({
           url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
-          projection: gcjMecator,
+          projection: projzh.gcjMecatorProj,
         }),
         visible: true,
       });
@@ -247,7 +257,7 @@ export default {
           culture: "zh-cn",
           imagerySet: "RoadOnDemand",
           key: "Ah6weJHMS4N0HbiJcJhxdL1hSi7QUXhD8Z5maizF-kVia3oP0Xa6wkTlLsDfRr4P",
-          projection: gcjMecator,
+          projection: projzh.gcjMecatorProj,
         }),
         preload: Infinity,
         visible: false,
@@ -282,7 +292,7 @@ export default {
         title: "高德地图",
         source: new XYZ({
           url: "http://webrd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scl=1&style=8&x={x}&y={y}&z={z}",
-          projection: gcjMecator,
+          projection: 'GCJ-02',
         }),
         visible: false,
       });
@@ -300,26 +310,6 @@ export default {
         );
       });
 
-      // let baiduSource = new XYZ({
-      //   projection: "bd-09",
-      //   wrapX: true,
-      //   url:
-      //     "http://maponline{0-3}.bdimg.com/tile/?qt=vtile&x={x}&y={y}&z={z}&styles=pl&scaler=1&udt=20191119",
-      //   tileGrid: new TileGrid({
-      //     minZoom: 3,
-      //     resolutions: bmercResolutions,
-      //     origin: [0, 0],
-      //     extent: applyTransform(baiduExtent, projzh.ll2bmerc),
-      //   })
-      // });
-      // var xyzTileUrlFunction = baiduSource.getTileUrlFunction();
-      // var tmsTileUrlFunction = function([z, x, y]) {
-      //   return xyzTileUrlFunction([z, x, -y - 1]);
-      // };
-      // baiduSource.setTileUrlFunction(tmsTileUrlFunction);
-      // this.bdRoadLayer = new Tile({
-      //   source: baiduSource
-      // });
       this.bdRoadLayer = new TileLayer({
         title: "百度路网地图",
         visible: false,
@@ -368,7 +358,7 @@ export default {
           tileGrid: new TileGrid({
             resolutions: bmercResolutions,
             origin: [0, 0],
-            extent: applyTransform(baiduExtent, projzh.ll2bmerc),
+            extent: applyTransform(projParams.baiduExtent, projzh.ll2bmerc),
             tileSize: [512, 512],
           }),
         }),
@@ -378,7 +368,7 @@ export default {
         title: "彩色地图",
         source: new XYZ({
           url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}",
-          projection: gcjMecator,
+          projection: projzh.gcjMecatorProj,
           maxZoom: 18,
         }),
         visible: false,
@@ -388,7 +378,7 @@ export default {
         title: "暖色地图",
         source: new XYZ({
           url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetWarm/MapServer/tile/{z}/{y}/{x}",
-          projection: gcjMecator,
+          projection: projzh.gcjMecatorProj,
         }),
         visible: false,
       });
@@ -398,7 +388,7 @@ export default {
         source: new XYZ({
           url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetGray/MapServer/tile/{z}/{y}/{x}",
           maxZoom: 16,
-          projection: gcjMecator,
+          projection: projzh.gcjMecatorProj,
         }),
         visible: false,
       });
@@ -407,7 +397,7 @@ export default {
       this.shadeLayer = new TileLayer({
         source: new XYZ({
           url: "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",
-          projection: gcjMecator,
+          // projection: projzh.gcjMecatorProj,
           maxZoom: 13,
         }),
         visible: false,
