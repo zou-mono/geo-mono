@@ -1,36 +1,45 @@
 <template>
-  <div id="map" class="map"></div>
+  <div id="map" class="map">
+    <coord-view 
+      ref="coordview"
+      :mapMode="shared.mapMode">
+    </coord-view>
+  </div>
 </template>
 <script>
 import Vue from "vue";
 import { Map, View } from "ol";
 import "ol/ol.css";
 import TileLayer from "ol/layer/Tile";
-import VectorTileLayer from 'ol/layer/VectorTile';
+import VectorTileLayer from "ol/layer/VectorTile";
 import XYZ from "ol/source/XYZ";
 import overlayChart from "./overlayChart";
 import ncovData from "../data/ncovData.js";
 import OSM from "ol/source/OSM";
 import BingMaps from "ol/source/BingMaps";
 import { fromLonLat } from "ol/proj";
-import {projzh, projParams} from "../utils/projzh";
+import { projzh, projParams } from "../utils/projzh";
 import Projection from "ol/proj/Projection";
+import MousePosition from "ol/control/MousePosition";
+import { defaults } from "ol/control";
+import { createStringXY } from "ol/coordinate";
 import {
   addProjection,
   addCoordinateTransforms,
-  get as getProjection,
+  get as getProjection
 } from "ol/proj";
 import WMTS from "ol/source/WMTS";
 import { getWidth, getTopLeft } from "ol/extent";
 import WMTSTileGrid from "ol/tilegrid/WMTS";
 import TileGrid from "ol/tilegrid/TileGrid";
-import TileImage from 'ol/source/TileImage'
+import TileImage from "ol/source/TileImage";
 import { applyTransform } from "ol/extent";
-import VectorTile from 'ol/source/VectorTile'
-import MVT from 'ol/format/MVT';
-import apply from 'ol-mapbox-style';
-import olms from 'ol-mapbox-style';
-import VectorTileSource from 'ol/source/VectorTile';
+import VectorTile from "ol/source/VectorTile";
+import MVT from "ol/format/MVT";
+import apply from "ol-mapbox-style";
+import olms from "ol-mapbox-style";
+import CoordView from "./CoordView.vue"
+import VectorTileSource from "ol/source/VectorTile";
 // import Tile from 'ol/source/Tile'
 
 const OverlayChart = Vue.extend(overlayChart);
@@ -40,6 +49,8 @@ export default {
     return {
       map_id: "map",
       map: undefined,
+      // mapMode: this.$store.state.mapMode,
+      shared: this.$store.state,
       overlayChartObj: undefined,
       esriDarkLayer: undefined,
       osmLayer: undefined,
@@ -56,7 +67,7 @@ export default {
       map_baseOption: {
         target: "map",
         layers: [],
-        // pixelRatio: window.devicePixelRatio * 2, 
+        // pixelRatio: window.devicePixelRatio * 2,
         view: new View({
           projection: "EPSG:3857",
           center: fromLonLat([114.08, 22.6]),
@@ -64,19 +75,22 @@ export default {
           constrainResolution: true, // 设置缩放级别为整数，增加这个参数可以避免缩放时候字体过小或者模糊
           smoothResolutionConstraint: false,
           zoom: 10,
-          maxZoom: 16,
-        }),
-      },
+          maxZoom: 16
+        })
+      }
     };
   },
   props: ["mapMode"],
+  components: {
+    CoordView
+  },
   mounted() {
     this.init();
   },
   watch: {
     // basemapURL = "https://basemaps-api.arcgis.com/arcgis/rest/services/styles/" + basemapId + "?type=style&token=" + apiKey
 
-    mapMode: function (val) {
+    mapMode: function(val) {
       this.osmLayer.setVisible(false);
       this.esriDarkLayer.setVisible(false);
       this.bingLayer.setVisible(false);
@@ -91,10 +105,10 @@ export default {
 
       const layers = this.map.getLayers().getArray();
       for (let i = layers.length - 1; i >= 0; --i) {
-        if (layers[i].get('mapbox-source')) {
+        if (layers[i].get("mapbox-source")) {
           this.map.removeLayer(layers[i]);
         }
-      };
+      }
       // this.vectorTopoLayer.setVisible(false);
 
       if (val === "esri-dark") {
@@ -134,9 +148,10 @@ export default {
         // });
         olms(
           this.map,
-          'https://basemaps-api.arcgis.com/arcgis/rest/services/styles/fd66a29879c44a288d2b117ad5da2b87?type=style&token=AAPK99491a76728e419a80b189671988d83e3o6To5dT7hFcxSYvPIaUqMDk_B1e3wDZrYxtCOd-zS17TWIYF_vUXneKOiLJ6BIa'
+          "https://basemaps-api.arcgis.com/arcgis/rest/services/styles/fd66a29879c44a288d2b117ad5da2b87?type=style&token=AAPK99491a76728e419a80b189671988d83e3o6To5dT7hFcxSYvPIaUqMDk_B1e3wDZrYxtCOd-zS17TWIYF_vUXneKOiLJ6BIa"
+          // 'https://basemaps-api.arcgis.com/arcgis/rest/services/styles/25fb9e2808da44e285d31ad9d00d0b09?type=style&token=AAPK99491a76728e419a80b189671988d83e3o6To5dT7hFcxSYvPIaUqMDk_B1e3wDZrYxtCOd-zS17TWIYF_vUXneKOiLJ6BIa'
           // "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/2020_USA_Median_Age/VectorTileServer/resources/styles/root.json"
-        )
+        );
         // olms(
         //   this.map,
         //   'https://basemaps-api.arcgis.com/arcgis/rest/services/styles/fd66a29879c44a288d2b117ad5da2b87?type=style&token=AAPK99491a76728e419a80b189671988d83e3o6To5dT7hFcxSYvPIaUqMDk_B1e3wDZrYxtCOd-zS17TWIYF_vUXneKOiLJ6BIa'
@@ -156,12 +171,12 @@ export default {
         //           })
         //         )
         //       }
-        //     });   
+        //     });
         // });
 
         this.map.getView().setMaxZoom(19);
       }
-    },
+    }
   },
   methods: {
     createTdtWMTSLayer() {
@@ -183,7 +198,8 @@ export default {
           attributions:
             'Tiles © <a href="http://www.tianditu.com/service/info.html?sid=5292&type=info">天地图</a>',
           // url: 'http://t'+Math.round(Math.random()*7)+'.tianditu.com/'+type+'/wmts',
-          url: "http://t0.tianditu.gov.cn/img_c/wmts?tk=b04ac957fe91b9c0e78877230acefe24",
+          url:
+            "http://t0.tianditu.gov.cn/img_c/wmts?tk=b04ac957fe91b9c0e78877230acefe24",
           layer: "img",
           matrixSet: "c",
           format: "tiles",
@@ -191,12 +207,12 @@ export default {
           tileGrid: new WMTSTileGrid({
             origin: getTopLeft(projectionExtent),
             resolutions: resolutions,
-            matrixIds: matrixIds,
+            matrixIds: matrixIds
           }),
           style: "default",
-          wrapX: true,
+          wrapX: true
         }),
-        visible: false,
+        visible: false
       });
       // layer.id = type;
       return layer;
@@ -240,15 +256,16 @@ export default {
 
       this.esriDarkLayer = new TileLayer({
         source: new XYZ({
-          url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
-          projection: projzh.gcjMecatorProj,
+          url:
+            "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
+          projection: projzh.gcjMecatorProj
         }),
-        visible: true,
+        visible: true
       });
 
       this.osmLayer = new TileLayer({
         source: new OSM(),
-        visible: false,
+        visible: false
       });
 
       this.bingLayer = new TileLayer({
@@ -256,11 +273,12 @@ export default {
           hidpi: false,
           culture: "zh-cn",
           imagerySet: "RoadOnDemand",
-          key: "Ah6weJHMS4N0HbiJcJhxdL1hSi7QUXhD8Z5maizF-kVia3oP0Xa6wkTlLsDfRr4P",
-          projection: projzh.gcjMecatorProj,
+          key:
+            "Ah6weJHMS4N0HbiJcJhxdL1hSi7QUXhD8Z5maizF-kVia3oP0Xa6wkTlLsDfRr4P",
+          projection: projzh.gcjMecatorProj
         }),
         preload: Infinity,
-        visible: false,
+        visible: false
       });
 
       // //天地图路网
@@ -274,27 +292,30 @@ export default {
       this.tdtSatelliteAnnoLayer = new TileLayer({
         title: "天地图文字标注",
         source: new XYZ({
-          url: "http://t{0-7}.tianditu.com/DataServer?T=cia_w&x={x}&y={y}&l={z}&tk=b04ac957fe91b9c0e78877230acefe24",
+          url:
+            "http://t{0-7}.tianditu.com/DataServer?T=cia_w&x={x}&y={y}&l={z}&tk=b04ac957fe91b9c0e78877230acefe24"
         }),
-        visible: false,
+        visible: false
       });
       //天地图卫星影像
       this.tdtSatelliteLayer = new TileLayer({
         title: "天地图卫星影像",
         source: new XYZ({
-          url: "http://t{0-7}.tianditu.com/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=b04ac957fe91b9c0e78877230acefe24",
+          url:
+            "http://t{0-7}.tianditu.com/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=b04ac957fe91b9c0e78877230acefe24"
         }),
-        visible: false,
+        visible: false
       });
       // this.tdtSatelliteLayer = this.createTdtWMTSLayer();
 
       this.amapRoadLayer = new TileLayer({
         title: "高德地图",
         source: new XYZ({
-          url: "http://webrd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scl=1&style=8&x={x}&y={y}&z={z}",
-          projection: 'GCJ-02',
+          url:
+            "http://webrd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scl=1&style=8&x={x}&y={y}&z={z}",
+          projection: "GCJ-02"
         }),
-        visible: false,
+        visible: false
       });
 
       let bmercResolutions = new Array(19);
@@ -317,7 +338,7 @@ export default {
           projection: "bd-09",
           maxZoom: 18,
           tilePixelRatio: 2,
-          tileUrlFunction: function (tileCoord) {
+          tileUrlFunction: function(tileCoord) {
             // var x = tileCoord[1];
             // var y = -1 * tileCoord[2];
             // var z = tileCoord[0];
@@ -334,7 +355,10 @@ export default {
             if (y < 0) {
               y = "M" + -y;
             }
-            return urls[index].replace("{x}", x).replace("{y}", y) .replace("{z}", z);
+            return urls[index]
+              .replace("{x}", x)
+              .replace("{y}", y)
+              .replace("{z}", z);
 
             //影像
             // return 'http://shangetu' + parseInt(Math.random() * 10) + '.map.bdimg.com/it/u=x=' + x +
@@ -359,48 +383,52 @@ export default {
             resolutions: bmercResolutions,
             origin: [0, 0],
             extent: applyTransform(projParams.baiduExtent, projzh.ll2bmerc),
-            tileSize: [512, 512],
-          }),
-        }),
+            tileSize: [512, 512]
+          })
+        })
       });
 
       this.colorLayer = new TileLayer({
         title: "彩色地图",
         source: new XYZ({
-          url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}",
+          url:
+            "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}",
           projection: projzh.gcjMecatorProj,
-          maxZoom: 18,
+          maxZoom: 18
         }),
-        visible: false,
+        visible: false
       });
 
       this.warmLayer = new TileLayer({
         title: "暖色地图",
         source: new XYZ({
-          url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetWarm/MapServer/tile/{z}/{y}/{x}",
-          projection: projzh.gcjMecatorProj,
+          url:
+            "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetWarm/MapServer/tile/{z}/{y}/{x}",
+          projection: projzh.gcjMecatorProj
         }),
-        visible: false,
+        visible: false
       });
 
       this.grayLayer = new TileLayer({
         title: "灰色地图",
         source: new XYZ({
-          url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetGray/MapServer/tile/{z}/{y}/{x}",
+          url:
+            "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetGray/MapServer/tile/{z}/{y}/{x}",
           maxZoom: 16,
-          projection: projzh.gcjMecatorProj,
+          projection: projzh.gcjMecatorProj
         }),
-        visible: false,
+        visible: false
       });
 
       // 山影地图
       this.shadeLayer = new TileLayer({
         source: new XYZ({
-          url: "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",
+          url:
+            "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",
           // projection: projzh.gcjMecatorProj,
-          maxZoom: 13,
+          maxZoom: 13
         }),
-        visible: false,
+        visible: false
       });
       // this.vectorTopoLayer = new VectorTileLayer({
       //   source: new VectorTile({
@@ -422,12 +450,28 @@ export default {
         this.tdtSatelliteLayer,
         this.tdtSatelliteAnnoLayer,
         this.bdRoadLayer,
-        this.shadeLayer,
+        this.shadeLayer
         // this.vectorTopoLayer
       ];
-      this.map = new Map(this.map_baseOption);
 
-      this.map.on("click", (evt) => {
+      // const mousePositionControl = new MousePosition({
+      //   coordinateFormat: createStringXY(4), //坐标格式
+      //   projection: "EPSG:4326", //地图投影坐标系
+      //   className: "custom-mouse-position", //坐标信息显示样式
+      //   // 显示鼠标位置信息的目标容器
+      //   target: document.getElementById("mouse-position"),
+      //   undefinedHTML: "&nbsp" //未定义坐标的标记
+      // });
+      const mousePositionControl = this.$refs.coordview.mousePositionControl
+
+      const map_option = {
+        ...this.map_baseOption,
+        controls: defaults().extend([mousePositionControl])
+      };
+
+      this.map = new Map(map_option);
+
+      this.map.on("click", evt => {
         let data = ncovData.add;
         this.showOverlayChart(evt.coordinate, data);
       });
@@ -444,7 +488,7 @@ export default {
 
       this.overlayChartObj = this.createOverlay({
         position,
-        data,
+        data
       });
       this.overlayChartObj.show();
     },
@@ -457,13 +501,13 @@ export default {
         data: {
           map: this.map,
           position: params.position,
-          chartData: params.data,
-        },
+          chartData: params.data
+        }
       });
 
       return obj;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -475,6 +519,7 @@ body {
   padding: 0px;
 }
 .map {
+  display: block;
   width: 100%;
   margin: 0px;
   height: 100%;
