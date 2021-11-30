@@ -1,15 +1,15 @@
 <template>
   <div id="PanelMap">
       <div class="item item-amap-road">
-        <img src=/img/data/thumb/area-basic.png @click="amap_road_Clicked">
+        <img src=/img/data/map-view/高德地图.png @click="amap_road_Clicked">
         <p class='map_name'>高德地图</p>
       </div>
       <div class="item item-baidu">
-        <img src=/img/data/thumb/area-basic.png @click="baidu_road_Clicked">
+        <img src=/img/data/map-view/百度地图.png @click="baidu_road_Clicked">
         <p class='map_name'>百度地图</p>
       </div>
       <div class="item item-osm">
-        <img src=/img/data/thumb/area-basic.png @click="osm_Clicked">
+        <img src=/img/data/map-view/OSM.png @click="osm_Clicked">
         <p class='map_name'>OSM街道地图</p>
       </div>
       <!-- <div class="item item-bing">
@@ -17,27 +17,27 @@
         <p class='map_name'>bing街道地图</p>
       </div> -->
       <div class="item item-esri-dark">
-        <img src=/img/data/thumb/area-basic.png @click="esri_dark_Clicked">
+        <img src=/img/data/map-view/蓝黑地图.png @click="esri_dark_Clicked">
         <p class='map_name'>蓝黑地图</p>
       </div>
       <div class="item item-color-map">
-        <img src=/img/data/thumb/area-basic.png @click="color_map_Clicked">
+        <img src=/img/data/map-view/彩色地图.png @click="color_map_Clicked">
         <p class='map_name'>彩色地图</p>
       </div>
       <div class="item item-warm-map">
-        <img src=/img/data/thumb/area-basic.png @click="warm_map_Clicked">
+        <img src=/img/data/map-view/暖色地图.png @click="warm_map_Clicked">
         <p class='map_name'>暖色地图</p>
       </div>
       <div class="item item-gray-map">
-        <img src=/img/data/thumb/area-basic.png @click="gray_map_Clicked">
+        <img src=/img/data/map-view/灰色地图.png @click="gray_map_Clicked">
         <p class='map_name'>灰色地图</p>
       </div>
       <div class="item item-tdt-satellite">
-        <img src=/img/data/thumb/area-basic.png @click="tdt_satellite_Clicked">
+        <img src=/img/data/map-view/天地图卫星.png @click="tdt_satellite_Clicked">
         <p class='map_name'>天地图卫星图</p>
       </div>
       <div class="item item-tdt-satellite">
-        <img src=/img/data/thumb/area-basic.png @click="shade_map_Clicked">
+        <img src=/img/data/map-view/山影地图.png @click="shade_map_Clicked">
         <p class='map_name'>山影地图</p>
       </div>
   </div>
