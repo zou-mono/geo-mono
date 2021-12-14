@@ -44,7 +44,7 @@
         <el-drawer
           :style="{ left: sidebar_width + 'px' }"
           v-drag-drawer
-          title="我嵌套了表格!"
+          title=""
           :visible.sync="CollapseState"
           direction="ltr"
           :modal="false"

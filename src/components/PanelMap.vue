@@ -62,7 +62,7 @@ export default {
       },
     };
   },
-  components: {mapView},
+  // components: {mapView},
   watch: {},
   mounted() {},
   methods: {
